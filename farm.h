@@ -33,6 +33,7 @@ public:
 
 	// Input method
 	istream& read(istream& in) override {
+		in.get();
 		cout << "\n Enter manager: ";
 		getline(in, manager);
 		cout << "\n Enter the number of normal cows: ";
@@ -84,7 +85,7 @@ public:
 
 	// Output method
 	ostream& print(ostream& out) const override {
-		out << "\n\n\n Manager: " << manager;
+		out << "\n Manager: " << manager;
 
 		out << "\n Cows: "<<animals.size();
 
@@ -108,10 +109,10 @@ public:
 		return out;
 	}
 
-	//Assignment operator
+	// Assignment operator
 	Farm& operator=(const Farm& obj);
 
-	//Selling animals
+	// Selling animals
 	void sellAnimal(int index) {
 		if (typeid(Cow) == typeid(*animals[index])) {
 			Cow copy = dynamic_cast<Cow&>(*animals[index]);
@@ -147,6 +148,46 @@ public:
 	// setter employees
 	void setEmployees(vector<Employee> employees) {
 		this->employees = employees;
+	}
+
+	const string getManager() const{
+		return manager;
+	}
+
+	void highestPaidEmployee() const {
+		try {
+			if(employees.size()==0)
+				throw out_of_range("\n Error! No employees found!");
+			Employee max = employees[0];
+			for (int i = 1; i < employees.size(); i++) {
+				if (employees[i].getSalary() > max.getSalary()) {
+					max = employees[i];
+				}
+			}
+			cout << max;
+		}
+		catch (out_of_range& e) {
+			cout << e.what();
+		}
+	}
+
+	void busiestEmployee() const{
+		
+		try {
+			if(employees.size()==0)
+				throw out_of_range("\n Error! No employees found!");
+			Employee max = employees[0];
+			for (int i = 1; i < employees.size(); i++) {
+				if (employees[i].getTasks().size() > max.getTasks().size()) {
+					max = employees[i];
+				}
+			}
+			cout << max;	
+		}
+		catch (out_of_range& e) {
+			cout << e.what();
+		}
+
 	}
 
 	friend istream& operator>>(istream& in, Farm& obj);

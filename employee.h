@@ -61,6 +61,16 @@ public:
 	// Assignment operator
 	Employee& operator=(const Employee& obj);
 
+	// Getter salary
+	float getSalary() const {
+		return salary;
+	}
+	
+	// getter tasks
+	list<string> getTasks() const {
+		return tasks;
+	}
+
 	// Input/Output operators
 	friend istream& operator>>(istream& in, Employee& obj);
 	friend ostream& operator<<(ostream& out, const Employee& obj);

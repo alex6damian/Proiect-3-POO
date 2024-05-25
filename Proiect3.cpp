@@ -51,6 +51,7 @@ public:
 		cout << "\n Price for this cow: " << obj.getPrice() << "$ \n";
 	}
 };
+
 int main()
 {
     //Info<> animalInfo;
@@ -69,29 +70,22 @@ int main()
 
 
 
- /*   set<Animal> s;
+    set<Animal> s;
     map<string, int> foodstack;
     foodstack["Wheat"] = 100;
     Cow c1(10, 500, "Ileana", "Black", "Meat", 0);
     Animal *c=dynamic_cast<Cow*>(&c1);
     vector<Animal*> animals;
     animals.push_back(c);
+
     vector<Employee> employees;
 
     Farm f1("Eu", s, foodstack, animals, employees);
-    cout << f1;
-    f1.sellAnimal(0);
-    cout << f1;*/
-    /*Singleton * s1 = Singleton::getInstance();
-    Singleton * s2 = Singleton::getInstance();
-    cout<<s1<<endl;
-    cout<<s2<<endl;*/
-
     Singleton *menu=Singleton::getInstance();
-    Wagyu f=menu->create<Wagyu>();
-    Farm f1=menu->create<Farm>();
-    menu->print(f);
-    menu->print(f1);
+    Farm f2;
+    menu->addFarm(f1);
+    menu->addFarm(f2);
+    menu->run();
     //Wagyu w=menu->create<Wagyu>();
     //cout << w;
     return 0;
