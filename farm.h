@@ -97,7 +97,7 @@ public:
 			out << "\n " << *it;
 		}
 
-		out << "\n Employees: "<<employees.size();
+		out << "\n\n Employees: "<<employees.size();
 		for (int i = 0; i < employees.size(); i++) 
 			out << employees[i];
 		
@@ -113,17 +113,11 @@ public:
 	Farm& operator=(const Farm& obj);
 
 	// Selling animals
-	void sellAnimal(int index) {
-		if (typeid(Cow) == typeid(*animals[index])) {
-			Cow copy = dynamic_cast<Cow&>(*animals[index]);
-			this->soldAnimals.insert(copy);
-		}
-		else if (typeid(Wagyu) == typeid(*animals[index])){
-			Wagyu copy = dynamic_cast<Wagyu&>(*animals[index]);
-			this->soldAnimals.insert(copy);
-		}
+	void sellAnimal(const Animal& obj) {
+
+		this->soldAnimals.insert(obj);
 		for (int i = 0; i < this->animals.size(); i++) {
-				if (animals[i] == this->animals[index]) {
+				if (animals[i] == &obj) {
 				this->animals.erase(this->animals.begin() + i);
 				break;
 			}
@@ -136,18 +130,23 @@ public:
 	}
 
 	// getter employees
-	const vector<Employee> getEmployees() {
+	vector<Employee> getEmployees() {
 		return employees;
+	}
+
+	// setter employee
+	void setEmployees(vector<Employee> employees) {
+		this->employees = employees;
+	}
+
+	void setTask(int index, string task) {
+		employees[index].addTask(task);
+		employees[index].setSalary(employees[index].getSalary() + 200);
 	}
 
 	// setter animals
 	void setAnimals(vector<Animal*> animals) {
 		this->animals = animals;
-	}
-
-	// setter employees
-	void setEmployees(vector<Employee> employees) {
-		this->employees = employees;
 	}
 
 	const string getManager() const{
@@ -190,6 +189,12 @@ public:
 
 	}
 
+	Farm& operator+(const Employee& obj);
+
+	Farm& operator-(const Employee& obj);
+
+	Farm& operator+(const Animal& obj);
+
 	friend istream& operator>>(istream& in, Farm& obj);
 	friend ostream& operator<<(ostream& out, const Farm& obj);
 };
@@ -199,6 +204,7 @@ Farm::Farm():manager("Unknown") {}
 
 // Constructor with parameters
 Farm::Farm(string manager, set<Animal> soldAnimals, map<string, int> foodStock, vector<Animal*> animals, vector<Employee> employees) {
+	
 	this->manager = manager;
 	this->soldAnimals = soldAnimals;
 	this->foodStock = foodStock;
@@ -210,14 +216,13 @@ Farm::Farm(string manager, set<Animal> soldAnimals, map<string, int> foodStock, 
 	this->animals.clear();
 
 	for(int i=0;i<animals.size();i++)
-		if (typeid(Cow) == typeid(*animals[i])) {
-			Animal* a = new Cow(dynamic_cast<Cow&>(*animals[i]));
-			this->animals.push_back(a);
+		if (typeid(Wagyu) == typeid(*animals[i])) {
+			this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*animals[i])));
 		}
-		else if(typeid(Wagyu) == typeid(*animals[i])) {
-			Animal* a = new Wagyu(dynamic_cast<Wagyu&>(*animals[i]));
-			this->animals.push_back(a);
+		else if (typeid(Cow) == typeid(*animals[i])) {
+			this->animals.push_back(new Cow(dynamic_cast<Cow&>(*animals[i])));
 		}
+		 
 }
 
 // Copy constructor
@@ -229,13 +234,11 @@ Farm::Farm(const Farm& obj) : manager(obj.manager), soldAnimals(obj.soldAnimals)
 	this->animals.clear();
 
 	for (int i = 0;i < animals.size();i++)
-		if (typeid(Cow) == typeid(*animals[i])) {
-			Animal* a = new Cow(dynamic_cast<Cow&>(*animals[i]));
-			this->animals.push_back(a);
+		if (typeid(Wagyu) == typeid(*animals[i])) {
+			this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*animals[i])));
 		}
-		else if (typeid(Wagyu) == typeid(*animals[i])) {
-			Animal* a = new Wagyu(dynamic_cast<Wagyu&>(*animals[i]));
-			this->animals.push_back(a);
+		else if (typeid(Cow) == typeid(*animals[i])) {
+			this->animals.push_back(new Cow(dynamic_cast<Cow&>(*animals[i])));
 		}
 }
 
@@ -284,4 +287,28 @@ istream& operator>>(istream& in, Farm& obj) {
 // Output operator
 ostream& operator<<(ostream& out, const Farm& obj) {
 	return obj.print(out);
+}
+
+Farm& Farm::operator+(const Employee& obj) {
+	this->employees.push_back(obj);
+	return *this;
+}
+
+Farm& Farm::operator-(const Employee& obj) {
+	for(int i=0;i<this->employees.size();i++)
+		if (this->employees[i] == obj) {
+			this->employees.erase(this->employees.begin() + i);
+			break;
+		}
+	return *this;
+}
+
+Farm& Farm::operator+(const Animal& obj) {
+
+	if (typeid(obj) == typeid(Wagyu))
+		this->animals.push_back(new Wagyu(dynamic_cast<const Wagyu&>(obj)));
+	else if (typeid(obj) == typeid(Cow))
+		this->animals.push_back(new Cow(dynamic_cast<const Cow&>(obj)));
+
+	return *this;
 }

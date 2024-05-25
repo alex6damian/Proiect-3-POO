@@ -73,18 +73,24 @@ int main()
     set<Animal> s;
     map<string, int> foodstack;
     foodstack["Wheat"] = 100;
+    foodstack["Water"] = 1000;
     Cow c1(10, 500, "Ileana", "Black", "Meat", 0);
     Animal *c=dynamic_cast<Cow*>(&c1);
     vector<Animal*> animals;
     animals.push_back(c);
-
+    Animal *a=new Wagyu(10,500,"John","Red","Both",0, "Australian", "A5", 85);
+    animals.push_back(a);
     vector<Employee> employees;
-
+    Employee e1;
+    employees.push_back(e1);
     Farm f1("Eu", s, foodstack, animals, employees);
     Singleton *menu=Singleton::getInstance();
     Farm f2;
     menu->addFarm(f1);
     menu->addFarm(f2);
+  /*  vector<Farm*> farms;
+    farms.push_back(&f1);
+    cout << *farms[0];*/
     menu->run();
     //Wagyu w=menu->create<Wagyu>();
     //cout << w;

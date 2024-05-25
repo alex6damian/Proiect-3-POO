@@ -69,7 +69,7 @@ public:
 		}
 		cout << "\n Marbling score(0-100): ";
 		in >> marbling;
-
+		this->price=weight*10*marbling/10;
 		return in;
 	}
 
@@ -96,7 +96,7 @@ public:
 Wagyu::Wagyu() : Animal(), Cow(), breed("Unknown"), grade("Unknown"), marbling(0) {}
 
 // Constructor with parameters
-Wagyu::Wagyu(int age, float weight, string name, string color, string usage, bool isPregnant, string breed, string grade, float marbling) : Cow(age, weight, name, color, usage, isPregnant), breed(breed), grade(grade), marbling(marbling) {
+Wagyu::Wagyu(int age, float weight, string name, string color, string usage, bool isPregnant, string breed, string grade, float marbling) :Animal(age, weight, name), Cow(age, weight, name, color, usage, isPregnant), breed(breed), grade(grade), marbling(marbling) {
 	this->price=weight*100;
 }
 

@@ -65,11 +65,24 @@ public:
 	float getSalary() const {
 		return salary;
 	}
+
+	void setSalary(float salary) {
+		this->salary = salary;
+	}
 	
 	// getter tasks
 	list<string> getTasks() const {
 		return tasks;
 	}
+
+	// getter name	
+	string getName() const {
+		return name;
+	}
+
+	bool operator==(const Employee& obj);
+
+	void addTask(string task);
 
 	// Input/Output operators
 	friend istream& operator>>(istream& in, Employee& obj);
@@ -107,4 +120,12 @@ istream& operator>>(istream& in, Employee& obj) {
 // Output operator
 ostream& operator<<(ostream& out, const Employee& obj) {
 	return obj.print(out);
+}
+
+bool Employee::operator==(const Employee& obj) {
+	return this->salary=obj.salary && this->name==obj.name && this->tasks==obj.tasks;
+}
+
+void Employee::addTask(string task){
+	tasks.push_back(task);
 }

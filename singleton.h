@@ -7,7 +7,7 @@ class Singleton {
 private:
 
 	static Singleton* instance;
-	vector<Farm> farms;
+	vector<Farm*> farms;
 
 	// Default Constructor
 	Singleton() = default;
@@ -33,8 +33,8 @@ public:
 	// Disable assignment operator
 	Singleton& operator=(const Singleton&) = delete;
 
-	void addFarm(const Farm& farm) {
-		farms.push_back(farm);
+	void addFarm(Farm& farm) {
+		farms.push_back(&farm);
 	}
 
 	// Create method
@@ -48,19 +48,20 @@ public:
 
 	// Print method
 	template<class T>
-	void print(T obj) {
-		cout << obj;
+	void print(const T* obj) const{
+		cout << *obj;
 	}
 
 	void run();
 
-	void manageFarm( Farm& obj);
+	void manageFarm(Farm& obj);
 
 	void farmInfo(const Farm& obj);
 };
 
 Singleton* Singleton::instance = NULL;
 
+// de rezolvat exceptiile
 void Singleton::run() {
 	int k = 1;
 
@@ -70,61 +71,291 @@ void Singleton::run() {
 		cout << " 3. Manage a farm" << endl;
 		cout << " 4. Delete a farm" << endl;
 		cout << " 5. Exit" << endl;
-		cout << " Enter your choice: ";
+
 		int option;
-		cin >> option;
-		switch (option) {
-		case 1: {
-			cout << "\n Create" << '\n';
-			addFarm(create<Farm>());
-			break;
-		}
-		case 2: {
-			cout << "\n Get informations" << '\n';
-			cout << " Select a farm by its manager:";
-			for(int i=0;i<farms.size();i++){
-				cout << "\n " << i + 1 << ". " << farms[i].getManager();
-			}
-		int index;
-		while(true) {
-			cout<<"\n Enter the index of the farm: ";
-			cin>>index;
+		while (true) {
+			cout << " Enter your choice: ";
+			cin >> option;
 			try {
-				if(cin.fail())
+				if (cin.fail())
 					throw invalid_argument("\n Invalid input");
-				if(index < 0 || index > farms.size())
-					throw out_of_range(" Index out of range");
-				break;
-			} catch (out_of_range& e) {
-				cout << e.what();
+				else if (option < 1 || option>5 || option%10>9)
+					throw out_of_range("\n Index out of range");
+				else break;
 			}
-			catch(const invalid_argument &e){
-				cout<<e.what()<<'\n';
+			catch (out_of_range& e) {
+				cout << e.what() << '\n';
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what() << '\n';
 				cin.clear();
 				cin.ignore(256, '\n');
 			}
-			catch(...) {
+			catch (...) {
 				cout << "\n Invalid input";
 			}
 		}
-			farmInfo(farms[index - 1]);
+			switch (option) {
+			case 1: {
+				cout << "\n Create" << '\n';
+				Farm f = create<Farm>();
+				addFarm(f);
+				break;
+			}
+			case 2: {
+				cout << "\n Get informations" << '\n';
+				cout << " Select a farm by its manager:";
+				for (int i = 0;i < farms.size();i++) {
+					cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+				}
+				int index;
+				while (true) {
+					cout << "\n Enter the index of the farm: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index < 1 || index > farms.size())
+							throw out_of_range(" Index out of range");
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				farmInfo(*farms[index - 1]);
+				break;
+			}
+			case 3: {
+				cout << "\n Manage a farm" << '\n';
+				cout << " Select a farm by its manager:";
+				for (int i = 0;i < farms.size();i++) {
+					cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+				}
+				int index;
+				while (true) {
+					cout << "\n Enter the index of the farm: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index < 1 || index > farms.size())
+							throw out_of_range(" Index out of range");
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				manageFarm(*farms[index - 1]);
+				break;
+			}
+			case 4: {
+				cout << "\n Delete" << '\n';
+				break;
+			}
+			case 5: {
+				cout << "\n Exit" << '\n';
+				k = 0;
+				break;}
+			}
+	}
+}
+
+// de rezolvat exceptiile
+void Singleton::manageFarm( Farm& obj) {
+	cout << "\n\n You have selected the farm managed by " << obj.getManager();
+	cout << "\n Select what type of operation you would like to perform:";
+	list<string> tasks;
+	Employee e1(tasks, "John", 5000);
+	Employee e2(tasks, "Alice", 6000);
+	Employee e3(tasks, "Bob", 7000);
+	Employee e4(tasks, "Charlie", 8000);
+	Employee e5(tasks, "David", 9000);
+	vector<Employee> employees;
+	employees.push_back(e1);
+	employees.push_back(e2);
+	employees.push_back(e3);
+	employees.push_back(e4);
+	employees.push_back(e5);
+	int k = 1;
+	while (k) {
+
+		cout << "\n\n 1. Hire a new employee";
+		cout << "\n 2. Fire an employee";
+		cout << "\n 3. Assign a task to an employee";
+		cout<< "\n 4. Get a new cow";
+		cout<< "\n 5. Sell a cow";
+		cout << "\n 6. Return to the main menu";
+		int option;
+		while (true) {
+			cout<<"\n Enter your choice: ";
+			cin >> option;
+			try {
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input");
+				if(option<1 || option>6)
+					throw out_of_range("\n Index out of range");
 			break;
+			}
+			catch (out_of_range& e) {
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what() << '\n';
+				cin.clear();
+				cin.ignore(256, '\n');
+			}
+			catch (...) {
+				cout << "\n Invalid input";
+			}
 		}
-		case 3: {
-			cout << "\n Manage a farm" << '\n';
-			cout << " Select a farm by its manager:";
-			for (int i = 0;i < farms.size();i++) {
-				cout << "\n " << i + 1 << ". " << farms[i].getManager();
+		
+		switch (option) {
+		case 1: {
+			if (employees.size()) {
+			cout << "\n\n Select an employee to hire: ";
+			for (int i = 0;i < employees.size();i++) {
+				cout << "\n " << i + 1 << ". " << employees[i].getName();
+				cout<<", requested salary: "<<employees[i].getSalary()<<"$";
 			}
 			int index;
 			while (true) {
-				cout << "\n Enter the index of the farm: ";
+					cout << "\n Enter the index of the employee: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index<1 || index>employees.size())
+							throw out_of_range("\n Index out of range");
+						
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				obj = obj + employees[index - 1];
+				employees.erase(employees.begin() + index - 1);
+				cout << " The employee has been successfully hired";
+			}
+			else cout << "\n There are no more employees to hire";
+			break;}
+		case 2: {
+			if (obj.getEmployees().size()) {
+				cout << "\n\n Select an employee to fire: ";
+				for (int i = 0;i < obj.getEmployees().size();i++) {
+					cout << "\n " << i + 1 << ". " << obj.getEmployees()[i].getName();
+				}
+				int index;
+				while (true) {
+					cout << "\n Enter the index of the employee: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index<1 || index>employees.size())
+							throw out_of_range("\n Index out of range");
+						
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				obj = obj - obj.getEmployees()[index - 1];
+				cout << " The employee has been successfully fired";
+			}
+			else {
+				cout << "\n There are no employees to fire";
+			}
+			break;}
+		case 3: {
+			if (obj.getEmployees().size()) {
+				cout << "\n\n Select an employee to assign a task: ";
+				for (int i = 0;i < obj.getEmployees().size();i++) {
+					cout << "\n " << i + 1 << ". " << obj.getEmployees()[i].getName();
+				}
+				int index;
+				while (true) {
+					cout << "\n Enter the index of the employee: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index<1 || index>employees.size())
+							throw out_of_range("\n Index out of range");
+
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				string task;
+			cout << "\n Enter the task: ";
+			cin.get();
+			getline(cin, task);
+			obj.setTask(index-1, task);
+			}
+			else {
+				cout << "\n There are no employees!";
+			}
+			break;}
+		case 4: {
+			cout << "\n Select a cow to buy:";
+			cout << "\n 1. Wagyu cow";
+			cout << "\n 2. Romanian cow";
+			int index;
+			while (true) {
+				cout << "\n Enter the index of the cow: ";
 				cin >> index;
 				try {
 					if (cin.fail())
 						throw invalid_argument("\n Invalid input");
-					if (index < 0 || index > farms.size())
-						throw out_of_range(" Index out of range");
+					if (index<1 || index>employees.size())
+						throw out_of_range("\n Index out of range");
+
 					break;
 				}
 				catch (out_of_range& e) {
@@ -139,45 +370,51 @@ void Singleton::run() {
 					cout << "\n Invalid input";
 				}
 			}
-			manageFarm(farms[index - 1]);
-			break;
-		}
-		case 4: {
-			cout << "\n Delete" << '\n';
-			break;
-		}
-		case 5: {
-			cout << "\n Exit" << '\n';
-			k = 0;
-			break;}
-		}
-	}
-}
-
-void Singleton::manageFarm( Farm& obj) {
-	cout << "\n\n You have selected the farm managed by " << obj.getManager();
-	cout << "\n Select what type of operation you would like to perform:";
-	int k = 1;
-	while (k) {
-
-
-		int option;
-		cin >> option;
-		switch (option) {
-		case 1: {
-
-			break;}
-		case 2: {
-
-			break;}
-		case 3: {
-
-			break;}
-		case 4: {
-
+			if (index == 1) {
+				cin.get();
+				obj=obj + create<Wagyu>();
+			}
+			else if (index == 2) {
+				cin.get();
+				obj = obj + create<Cow>();
+			}
 			break;}
 		case 5: {
+			if (obj.getAnimals().size()) {
+				cout << "\n Select a cow to sell:";
+				for (int i = 0;i < obj.getAnimals().size();i++) {
+					cout << "\n " << i + 1 << ". " << obj.getAnimals()[i]->getName();
+					cout<<", price: "<<obj.getAnimals()[i]->getPrice()<<"$";
+				}
+				int index;
+				while (true) {
+					cout << "\n Enter the index of the cow: ";
+					cin >> index;
+					try {
+						if (cin.fail())
+							throw invalid_argument("\n Invalid input");
+						if (index<1 || index>obj.getAnimals().size())
+							throw out_of_range("\n Index out of range");
 
+						break;
+					}
+					catch (out_of_range& e) {
+						cout << e.what();
+					}
+					catch (const invalid_argument& e) {
+						cout << e.what() << '\n';
+						cin.clear();
+						cin.ignore(256, '\n');
+					}
+					catch (...) {
+						cout << "\n Invalid input";
+					}
+				}
+				cout<<"\n The cow has been successfully sold for "<<obj.getAnimals()[index-1]->getPrice()<<"$";
+				obj.sellAnimal(*obj.getAnimals()[index-1]);
+
+			}
+			else cout<<"\n There are no cows to sell";
 			break;
 		}
 		case 6: {
@@ -189,6 +426,7 @@ void Singleton::manageFarm( Farm& obj) {
 
 }
 
+// exceptii tratate
 void Singleton::farmInfo(const Farm& obj) {
 	cout << "\n\n You have selected the farm managed by " << obj.getManager();
 	cout << "\n Select what type of information you would like to get:";
@@ -198,12 +436,32 @@ void Singleton::farmInfo(const Farm& obj) {
 		cout << "\n 2. Display the highest paid employee";
 		cout << "\n 3. Display the busiest employee(by the number of tasks)";
 		cout << "\n 4. Return to the main menu";
-		cout << "\n Enter your choice: ";
-		int option;
-		cin >> option;
-		switch (option) {
+		int index;
+		while (true) {
+			cout << "\n Enter your choice : ";
+			cin >> index;
+			try {
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input");
+				if (index<1 || index>4)
+					throw out_of_range("\n Index out of range");
+				break;
+			}
+			catch (out_of_range& e) {
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what() << '\n';
+				cin.clear();
+				cin.ignore(256, '\n');
+			}
+			catch (...) {
+				cout << "\n Invalid input";
+			}
+		}
+		switch (index) {
 		case 1: {
-			cout << obj;
+			print<Farm>(farms[index-1]);
 			break;
 		}
 		case 2: {

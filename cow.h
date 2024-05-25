@@ -58,6 +58,8 @@ public:
 		cout << "\n Is Pregnant(1-True, 0-False): ";
 		in >> isPregnant;
 
+		this->price=weight*10;
+
 		return in;
 	}
 
@@ -66,7 +68,7 @@ public:
 		Animal::print(out);
 		out << "\n Color: " << color;
 		out << "\n Usage: " << usage;
-		out << "\n Price: " << price;
+		out << "\n Price: " << price<<"$";
 		out << "\n Is Pregnant: ";
 		if (isPregnant)
 			out << "Yes";

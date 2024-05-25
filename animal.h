@@ -78,6 +78,9 @@ public:
 	// Pure virtual method to get the price of the animal
 	virtual float getPrice() const { return 0; }
 
+	// getter id
+	string getName() const { return name; }
+
 	friend istream& operator>>(istream& in, Animal& obj);
 	friend ostream& operator<<(ostream& out, const Animal& obj);
 	
@@ -85,6 +88,8 @@ public:
 	float getWeight() const { return weight; }
 
 	bool operator<(const Animal& obj) const {
+		if(weight==obj.weight)
+			return id>obj.id;
 		return weight < obj.weight;
 	}
 
