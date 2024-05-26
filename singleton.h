@@ -6,15 +6,8 @@
 #include "bids.h"
 #include <ctime>
 #include <cstdlib>
+#include "exception.h"
 using namespace std;
-
-class MyException : public exception {
-public:
-	const char* what() const noexcept override {
-		return "\n Please select a number, not a string";
-	}
-};
-
 
 class Singleton {
 private:
@@ -75,14 +68,7 @@ public:
 
 	void bids(Farm& obj);
 
-	int myStoi(const string& str) {
-		try {
-			return stoi(str);
-		}
-		catch (const invalid_argument& e) {
-			throw MyException();
-		}
-	}
+	int myStoi(const string& str);
 
 };
 
@@ -576,25 +562,23 @@ void Singleton::bids(Farm& obj) {
 	cout << "\n 2. Wagyu cows";
 	string nr;
 	int index;
+	cin.get();
 	while (true) {
 		cout<<"\n Select the type of cows: ";		
-		cin.get();
+		
 		getline(cin, nr);
 		try {
+			if(cin.fail())
+				throw invalid_argument("\n Invalid input");
 			index = myStoi(nr);
 			if(to_string(index)!=nr)
-				throw string("\n Please select a number");
-			if (cin.fail())
-				throw invalid_argument("\n Invalid input");
-			if (index<1 || index>2)
+				throw MyException();
+			else if (index<1 || index>2)
 				throw out_of_range("\n Index out of range");
 			break;
 		}
-		catch(string s) {
-			cout << s;
-		}
-		catch (out_of_range& e) {
-			cout << e.what();
+		catch (const out_of_range& e) {
+			cout << e.what()<<'\n';
 		}
 		catch (const invalid_argument& e) {
 			cout << e.what() << '\n';
@@ -603,6 +587,8 @@ void Singleton::bids(Farm& obj) {
 		}
 		catch (const MyException& e) {
 			cout << e.what() << "\n";
+			cin.clear();
+			
 		}
 		catch (...) {
 			cout << "\n Invalid input";
@@ -617,5 +603,19 @@ void Singleton::bids(Farm& obj) {
 		cout<<"\n Available Wagyu cows: \n";
 		const Animal* a = lWagyu.tryBid();
 		if (a) obj=obj+*a;
+	}
+}
+
+int Singleton::myStoi(const string& str) {
+	try {
+		size_t pos;
+		int num = stoi(str, &pos);
+		if (pos != str.length())
+			throw invalid_argument("");
+		return num;
+	}
+	catch (const invalid_argument& e) {
+		throw MyException();
+		return 0;
 	}
 }

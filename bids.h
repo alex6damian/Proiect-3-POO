@@ -2,6 +2,10 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
+#include "singleton.h"
+#include "exception.h"
+#include <vector>
 using namespace std;
 
 template<class T>
@@ -33,21 +37,39 @@ public:
 		}
 	}
 
+	int myStoi(const string& str) {
+		try {
+			size_t pos;
+			int num = stoi(str, &pos);
+			if (pos != str.length())
+				throw invalid_argument("");
+			return num;
+		}
+		catch (const invalid_argument& e) {
+			throw MyException();
+			return 0;
+		}
+	}
+
 	// Bid function
 	const T* tryBid() {
 		this->displayBids();
+		string nr;
 		int i;
 		while (true) {
 			cout << "\n Select a cow to bid on: ";
-			cin >> i;
+			getline(cin, nr);
 			try {
 				if (cin.fail())
 					throw invalid_argument("\n Invalid input");
-				if (i<1 || i>bids.size())
+				i = myStoi(nr);
+				if (to_string(i) != nr)
+					throw MyException();
+				else if (i<1 || i>bids.size())
 					throw out_of_range("\n Index out of range");
 				break;
 			}
-			catch (out_of_range& e) {
+			catch (const out_of_range& e) {
 				cout << e.what();
 			}
 			catch (const invalid_argument& e) {
@@ -55,21 +77,28 @@ public:
 				cin.clear();
 				cin.ignore(256, '\n');
 			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
 			catch (...) {
 				cout << "\n Invalid input";
 			}
 		}
 		auto it = bids.begin();
 		advance(it, i - 1);
-		float bid;
+		int bid;
 		while (true) {
 			cout << "\n Please enter your bid(curent bid is " << it->second << "$): ";
-			
-			cin >> bid;
+			getline(cin, nr);
 			try {
 				if (cin.fail())
 					throw invalid_argument("\n Invalid input!");
-				if (bid <= it->second) {
+				bid=myStoi(nr);
+
+				if(to_string(bid)!= nr)
+					throw MyException();
+				else if (bid <= it->second) {
 					throw "\n Bid is too low! You lost!";
 				}
 				break;
@@ -77,6 +106,10 @@ public:
 			catch (const char* msg) {
 				cout << msg << "\n";
 				return nullptr;
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
 			}
 			catch (const invalid_argument& e) {
 				cout << e.what() << "\n";
