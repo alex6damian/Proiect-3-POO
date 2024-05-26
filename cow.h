@@ -82,6 +82,10 @@ public:
 		return weight*10;
 	}
 
+	void setPrice(float price) {
+		this->price = price;
+	}
+
 	// Assignment Operator
 	Cow& operator=(const Cow& obj);
 

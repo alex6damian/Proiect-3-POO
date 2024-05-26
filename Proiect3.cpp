@@ -11,6 +11,9 @@
 #include <list>
 #include <set>
 #include "singleton.h"
+#include <ctime>
+#include <cstdlib>
+#include "bids.h"
 
 using namespace std;
 
@@ -52,8 +55,16 @@ public:
 	}
 };
 
+
 int main()
 {
+
+    /*Cow c3(10, 500, "Ileana", "Black", "Meat", 0);
+    Wagyu w3(10,500,"John","Red","Both",0, "Australian", "A5", 85);
+    Licitatie<Wagyu> l;
+    l.addBid(w3, w3.getWeight()*100);
+    l.displayBids();
+    l.tryBid(w3);*/
     //Info<> animalInfo;
     //Cow c1(10, 500, "Ileana", "Black", "Meat", 0);
     //Wagyu w(10,500,"John","Red","Both",0, "Australian", "A5", 85);
@@ -88,10 +99,11 @@ int main()
     Farm f2;
     menu->addFarm(f1);
     menu->addFarm(f2);
+    menu->run();
   /*  vector<Farm*> farms;
     farms.push_back(&f1);
     cout << *farms[0];*/
-    menu->run();
+   // menu->run();
     //Wagyu w=menu->create<Wagyu>();
     //cout << w;
     return 0;
