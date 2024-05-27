@@ -92,7 +92,10 @@ int main()
     Animal *a=new Wagyu(10,500,"John","Red","Both",0, "Australian", "A5", 85);
     animals.push_back(a);
     vector<Employee> employees;
-    Employee e1;
+    list<string> t;
+    Employee e1(t, "john", 5000);
+    Employee e2;
+    employees.push_back(e2);
     employees.push_back(e1);
     Farm f1("Eu", s, foodstack, animals, employees);
     Singleton *menu=Singleton::getInstance();
@@ -100,7 +103,10 @@ int main()
     menu->addFarm(f1);
     menu->addFarm(f2);
     menu->run();
-  /*  vector<Farm*> farms;
+    //Employee cx;
+    //cin >> cx;
+    //cout << cx;
+    /*  vector<Farm*> farms;
     farms.push_back(&f1);
     cout << *farms[0];*/
    // menu->run();

@@ -26,9 +26,35 @@ public:
 	// Input method
 	istream& read(istream& in) override {
 		Animal::read(in);
-		cout << "\n Color(1-Black, 2-Brown, 3-White): ";
 		int option;
-		in >> option;
+		while (true) {
+			cout << "\n Color(1-Black, 2-Brown, 3-White): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 1 || option>3)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 		switch (option) {
 		case 1: {
 			color = "Black";
@@ -40,8 +66,34 @@ public:
 			color = "White";
 			break;}
 		}
-		cout << "\n Usage(1-Milk, 2-Meat, 3-Both): ";
-		in >> option;
+		while (true) {
+			cout << "\n Usage(1-Milk, 2-Meat, 3-Both): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 1 || option>3)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 		switch (option) {
 		case 1: {
 			usage = "Milk";
@@ -55,8 +107,36 @@ public:
 			break;
 		}
 		}
-		cout << "\n Is Pregnant(1-True, 0-False): ";
-		in >> isPregnant;
+		while (true) {
+			cout << "\n Is pregnant?(1-Yes, 0-No): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0 || option>1)
+					throw out_of_range("\n Wrong input!\n");
+				else if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+				cin.get();
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
+		isPregnant = option;
 
 		this->price=weight*10;
 

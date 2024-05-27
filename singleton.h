@@ -48,7 +48,6 @@ public:
 	T create() {
 		T obj;
 		cin >> obj;
-		cin.get();
 		return obj;
 	}
 
@@ -87,26 +86,32 @@ void Singleton::run() {
 
 		int option;
 		while (true) {
-			cout << " Enter your choice: ";
-			cin >> option;
+			cout << "\n Select your next step: ";
+			string test;
+			getline(cin, test);
 			try {
+				option = myStoi(test);
+				if (option < 1 || option>5)
+					throw out_of_range("\n Wrong input!\n");
 				if (cin.fail())
-					throw invalid_argument("\n Invalid input");
-				else if (option < 1 || option>5 || option%10>9)
-					throw out_of_range("\n Index out of range");
-				else break;
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
 			}
-			catch (out_of_range& e) {
-				cout << e.what() << '\n';
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
 			}
 			catch (const invalid_argument& e) {
-				cout << e.what() << '\n';
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
 				cin.clear();
-				cin.ignore(256, '\n');
 			}
-			catch (...) {
-				cout << "\n Invalid input";
-			}
+			catch (...) { cout << "\n Invalid input!"; }
 		}
 			switch (option) {
 			case 1: {
@@ -116,68 +121,89 @@ void Singleton::run() {
 				break;
 			}
 			case 2: {
-				cout << "\n Get informations" << '\n';
-				cout << " Select a farm by its manager:";
-				for (int i = 0;i < farms.size();i++) {
-					cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+				if (farms.size()) {
+					cout << "\n Get informations" << '\n';
+					cout << " Select a farm by its manager:";
+					for (int i = 0;i < farms.size();i++) {
+						cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+					}
+					int index;
+					while (true) {
+						cout << "\n Select the index of the farm: ";
+						string test;
+						getline(cin, test);
+						try {
+							index = myStoi(test);
+							if (index < 1 || index>farms.size())
+								throw out_of_range("\n Wrong input!\n");
+							if (cin.fail())
+								throw invalid_argument("\n Invalid input type!\n");
+							else if (to_string(int(index)) != test)
+								throw MyException();
+							break;
+						}
+						catch (const out_of_range& e)
+						{
+							cout << e.what();
+						}
+						catch (const invalid_argument& e) {
+							cout << e.what();
+							cin.clear(); cin.ignore(256, '\n');
+						}
+						catch (const MyException& e) {
+							cout << e.what() << "\n";
+							cin.clear();
+						}
+						catch (...) { cout << "\n Invalid input!"; }
+					}
+					farmInfo(*farms[index - 1]);
 				}
-				int index;
-				while (true) {
-					cout << "\n Enter the index of the farm: ";
-					cin >> index;
-					try {
-						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index < 1 || index > farms.size())
-							throw out_of_range(" Index out of range");
-						break;
-					}
-					catch (out_of_range& e) {
-						cout << e.what();
-					}
-					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
-						cin.clear();
-						cin.ignore(256, '\n');
-					}
-					catch (...) {
-						cout << "\n Invalid input";
-					}
-				}
-				farmInfo(*farms[index - 1]);
+				else
+					cout << "\n There are no farms available!";
 				break;
 			}
 			case 3: {
-				cout << "\n Manage a farm" << '\n';
-				cout << " Select a farm by its manager:";
-				for (int i = 0;i < farms.size();i++) {
-					cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+				if (farms.size()) {
+					cout << "\n Manage a farm" << '\n';
+					cout << " Select a farm by its manager:";
+					for (int i = 0;i < farms.size();i++) {
+						cout << "\n " << i + 1 << ". " << farms[i]->getManager();
+					}
+					int index;
+					while (true) {
+						cout << "\n Select the index of the farm: ";
+						string test;
+						getline(cin, test);
+						try {
+							index = myStoi(test);
+							if (index < 1 || index>farms.size())
+								throw out_of_range("\n Wrong input!\n");
+							if (cin.fail())
+								throw invalid_argument("\n Invalid input type!\n");
+							else if (to_string(int(index)) != test)
+								throw MyException();
+							break;
+						}
+						catch (const out_of_range& e)
+						{
+							cout << e.what();
+						}
+						catch (const invalid_argument& e) {
+							cout << e.what();
+							cin.clear(); cin.ignore(256, '\n');
+						}
+						catch (const MyException& e) {
+							cout << e.what() << "\n";
+							cin.clear();
+						}
+						catch (...) { cout << "\n Invalid input!"; }
+					}
+					manageFarm(*farms[index - 1]);
 				}
-				int index;
-				while (true) {
-					cout << "\n Enter the index of the farm: ";
-					cin >> index;
-					try {
-						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index < 1 || index > farms.size())
-							throw out_of_range(" Index out of range");
-						break;
-					}
-					catch (out_of_range& e) {
-						cout << e.what();
-					}
-					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
-						cin.clear();
-						cin.ignore(256, '\n');
-					}
-					catch (...) {
-						cout << "\n Invalid input";
-					}
-				}
-				manageFarm(*farms[index - 1]);
-				break;
+				else
+					cout << "\n There are no farms to manage!\n";
+					break;
+				
 			}
 			case 4: {
 				if (farms.size()) {
@@ -188,26 +214,32 @@ void Singleton::run() {
 					}
 					int index;
 					while (true) {
-						cout << "\n Enter the index of the farm: ";
-						cin >> index;
+						cout << "\n Select the index of the farm: ";
+						string test;
+						getline(cin, test);
 						try {
+							index = myStoi(test);
+							if (index < 1 || index>farms.size())
+								throw out_of_range("\n Wrong input!\n");
 							if (cin.fail())
-								throw invalid_argument("\n Invalid input");
-							if (index < 1 || index > farms.size())
-								throw out_of_range(" Index out of range");
+								throw invalid_argument("\n Invalid input type!\n");
+							else if (to_string(int(index)) != test)
+								throw MyException();
 							break;
 						}
-						catch (out_of_range& e) {
+						catch (const out_of_range& e)
+						{
 							cout << e.what();
 						}
 						catch (const invalid_argument& e) {
-							cout << e.what() << '\n';
+							cout << e.what();
+							cin.clear(); cin.ignore(256, '\n');
+						}
+						catch (const MyException& e) {
+							cout << e.what() << "\n";
 							cin.clear();
-							cin.ignore(256, '\n');
 						}
-						catch (...) {
-							cout << "\n Invalid input";
-						}
+						catch (...) { cout << "\n Invalid input!"; }
 					}
 				deleteFarm(*farms[index - 1]);
 				}
@@ -253,26 +285,32 @@ void Singleton::manageFarm( Farm& obj) {
 		cout << "\n 7. Return to the main menu";
 		int option;
 		while (true) {
-			cout<<"\n Enter your choice: ";
-			cin >> option;
+			cout << "\n Enter your choice: ";
+			string test;
+			getline(cin, test);
 			try {
+				option = myStoi(test);
+				if (option < 0 || option>7)
+					throw out_of_range("\n Wrong input!\n");
 				if (cin.fail())
-					throw invalid_argument("\n Invalid input");
-				if(option<1 || option>7)
-					throw out_of_range("\n Index out of range");
-			break;
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
 			}
-			catch (out_of_range& e) {
+			catch (const out_of_range& e)
+			{
 				cout << e.what();
 			}
 			catch (const invalid_argument& e) {
-				cout << e.what() << '\n';
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
 				cin.clear();
-				cin.ignore(256, '\n');
 			}
-			catch (...) {
-				cout << "\n Invalid input";
-			}
+			catch (...) { cout << "\n Invalid input!"; }
 		}
 		
 		switch (option) {
@@ -285,28 +323,35 @@ void Singleton::manageFarm( Farm& obj) {
 			}
 			int index;
 			while (true) {
-					cout << "\n Enter the index of the employee: ";
-					cin >> index;
-					try {
-						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index<1 || index>employees.size())
-							throw out_of_range("\n Index out of range");
-						
-						break;
-					}
-					catch (out_of_range& e) {
-						cout << e.what();
-					}
-					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
-						cin.clear();
-						cin.ignore(256, '\n');
-					}
-					catch (...) {
-						cout << "\n Invalid input";
-					}
+				cout << "\n Enter the index of the employee: ";
+				string test;
+				getline(cin, test);
+				try {
+					index = myStoi(test);
+					if (cin.fail())
+						throw invalid_argument("\n Invalid input\n");
+					if (index < 1 || index>employees.size())
+						throw out_of_range("\n Index out of range\n");
+					else if (to_string(int(index)) != test)
+						throw MyException();
+					break;
 				}
+				catch (const out_of_range& e) {
+					cout << e.what();
+				}
+				catch (const invalid_argument& e) {
+					cout << e.what();
+					cin.clear();
+					cin.ignore(256, '\n');
+				}
+				catch (const MyException& e) {
+					cout << e.what() << '\n';
+					cin.clear();
+				}
+				catch (...) {
+					cout << "\n Invalid input";
+				}
+			}
 				obj = obj + employees[index - 1];
 				employees.erase(employees.begin() + index - 1);
 				cout << " The employee has been successfully hired";
@@ -322,22 +367,29 @@ void Singleton::manageFarm( Farm& obj) {
 				int index;
 				while (true) {
 					cout << "\n Enter the index of the employee: ";
-					cin >> index;
+					string test;
+					getline(cin, test);
 					try {
+						index = myStoi(test);
 						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index<1 || index>employees.size())
-							throw out_of_range("\n Index out of range");
-						
+							throw invalid_argument("\n Invalid input\n");
+						if (index < 1 || index>obj.getEmployees().size())
+							throw out_of_range("\n Index out of range\n");
+						else if (to_string(int(index)) != test)
+							throw MyException();
 						break;
 					}
-					catch (out_of_range& e) {
+					catch (const out_of_range& e) {
 						cout << e.what();
 					}
 					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
+						cout << e.what();
 						cin.clear();
 						cin.ignore(256, '\n');
+					}
+					catch (const MyException& e) {
+						cout << e.what() << '\n';
+						cin.clear();
 					}
 					catch (...) {
 						cout << "\n Invalid input";
@@ -359,22 +411,29 @@ void Singleton::manageFarm( Farm& obj) {
 				int index;
 				while (true) {
 					cout << "\n Enter the index of the employee: ";
-					cin >> index;
+					string test;
+					getline(cin, test);
 					try {
+						index = myStoi(test);
 						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index<1 || index>employees.size())
-							throw out_of_range("\n Index out of range");
-
+							throw invalid_argument("\n Invalid input\n");
+						if (index < 1 || index>obj.getEmployees().size())
+							throw out_of_range("\n Index out of range\n");
+						else if (to_string(int(index)) != test)
+							throw MyException();
 						break;
 					}
-					catch (out_of_range& e) {
+					catch (const out_of_range& e) {
 						cout << e.what();
 					}
 					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
+						cout << e.what();
 						cin.clear();
 						cin.ignore(256, '\n');
+					}
+					catch (const MyException& e) {
+						cout << e.what() << '\n';
+						cin.clear();
 					}
 					catch (...) {
 						cout << "\n Invalid input";
@@ -396,34 +455,39 @@ void Singleton::manageFarm( Farm& obj) {
 			cout << "\n 2. Romanian cow";
 			int index;
 			while (true) {
-				cout << "\n Enter the index of the cow: ";
-				cin >> index;
+				cout << "\n Enter the type of cow: ";
+				string test;
+				getline(cin, test);
 				try {
+					index = myStoi(test);
 					if (cin.fail())
-						throw invalid_argument("\n Invalid input");
-					if (index<1 || index>employees.size())
-						throw out_of_range("\n Index out of range");
-
+						throw invalid_argument("\n Invalid input\n");
+					if (index < 1 || index>2)
+						throw out_of_range("\n Index out of range\n");
+					else if (to_string(int(index)) != test)
+						throw MyException();
 					break;
 				}
-				catch (out_of_range& e) {
+				catch (const out_of_range& e) {
 					cout << e.what();
 				}
 				catch (const invalid_argument& e) {
-					cout << e.what() << '\n';
+					cout << e.what();
 					cin.clear();
 					cin.ignore(256, '\n');
+				}
+				catch (const MyException& e) {
+					cout << e.what() << '\n';
+					cin.clear();
 				}
 				catch (...) {
 					cout << "\n Invalid input";
 				}
 			}
 			if (index == 1) {
-				cin.get();
 				obj=obj + create<Wagyu>();
 			}
 			else if (index == 2) {
-				cin.get();
 				obj = obj + create<Cow>();
 			}
 			break;}
@@ -436,23 +500,30 @@ void Singleton::manageFarm( Farm& obj) {
 				}
 				int index;
 				while (true) {
-					cout << "\n Enter the index of the cow: ";
-					cin >> index;
+					cout << "\n Enter the index of the employee: ";
+					string test;
+					getline(cin, test);
 					try {
+						index = myStoi(test);
 						if (cin.fail())
-							throw invalid_argument("\n Invalid input");
-						if (index<1 || index>obj.getAnimals().size())
-							throw out_of_range("\n Index out of range");
-
+							throw invalid_argument("\n Invalid input\n");
+						if (index < 1 || index>obj.getAnimals().size())
+							throw out_of_range("\n Index out of range\n");
+						else if (to_string(int(index)) != test)
+							throw MyException();
 						break;
 					}
-					catch (out_of_range& e) {
+					catch (const out_of_range& e) {
 						cout << e.what();
 					}
 					catch (const invalid_argument& e) {
-						cout << e.what() << '\n';
+						cout << e.what();
 						cin.clear();
 						cin.ignore(256, '\n');
+					}
+					catch (const MyException& e) {
+						cout << e.what() << '\n';
+						cin.clear();
 					}
 					catch (...) {
 						cout << "\n Invalid input";
@@ -492,21 +563,29 @@ void Singleton::farmInfo(const Farm& obj) {
 		int index;
 		while (true) {
 			cout << "\n Enter your choice : ";
-			cin >> index;
+			string test;
+			getline(cin, test);
 			try {
+				index = myStoi(test);
 				if (cin.fail())
-					throw invalid_argument("\n Invalid input");
-				if (index<1 || index>4)
-					throw out_of_range("\n Index out of range");
+					throw invalid_argument("\n Invalid input\n");
+				if (index < 1 || index>4)
+					throw out_of_range("\n Index out of range\n");
+				else if (to_string(int(index)) != test)
+					throw MyException();
 				break;
 			}
-			catch (out_of_range& e) {
+			catch (const out_of_range& e) {
 				cout << e.what();
 			}
 			catch (const invalid_argument& e) {
-				cout << e.what() << '\n';
+				cout << e.what();
 				cin.clear();
 				cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what()<<'\n';
+				cin.clear();
 			}
 			catch (...) {
 				cout << "\n Invalid input";
@@ -535,6 +614,7 @@ void Singleton::farmInfo(const Farm& obj) {
 	}
 }
 
+// exceptii tratate
 void Singleton::deleteFarm(const Farm& obj) {
 	for (int i = 0;i < farms.size();i++) {
 		if (farms[i] == &obj) {
@@ -545,6 +625,7 @@ void Singleton::deleteFarm(const Farm& obj) {
 	cout<<"\n The farm has been successfully deleted";
 }
 
+// exceptii tratate
 void Singleton::bids(Farm& obj) {
 	srand(static_cast<unsigned int>(time(NULL)));
 	Licitatie<Cow> lCows;
@@ -560,12 +641,12 @@ void Singleton::bids(Farm& obj) {
 
 	cout << "\n 1. Normal cows";
 	cout << "\n 2. Wagyu cows";
+
+	//MODEL DE EXCEPTIE TRATATA PERFECT
 	string nr;
 	int index;
-	cin.get();
 	while (true) {
 		cout<<"\n Select the type of cows: ";		
-		
 		getline(cin, nr);
 		try {
 			if(cin.fail())

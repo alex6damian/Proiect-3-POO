@@ -31,52 +31,197 @@ public:
 	// Destructor
 	~Farm();
 
+	// stoi method
+	int myStoi(const string& str) {
+	try {
+		size_t pos;
+		int num = stoi(str, &pos);
+		if (pos != str.length())
+			throw invalid_argument("");
+		return num;
+	}
+	catch (const invalid_argument& e) {
+		throw MyException();
+	}
+}
 	// Input method
 	istream& read(istream& in) override {
-		in.get();
 		cout << "\n Enter manager: ";
 		getline(in, manager);
-		cout << "\n Enter the number of normal cows: ";
-		int n;
-		in >> n;
+		int option;
+		while (true) {
+			cout << "\n Enter the number of normal cows: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < option; i++) {
 			in.get();
 			Animal* a = new Cow();
 			in >> *a;
 			animals.push_back(a);
 		}
 
-		cout << " \n Enter the number of wagyu cows: ";
-		in >> n;
+		
+		while (true) {
+			cout << " \n Enter the number of wagyu cows: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < option; i++) {
 			in.get();
 			Animal* a = new Wagyu();
 			in >> *a;
 			animals.push_back(a);
 		}
 
-		cout << "\n Enter the number of employees: ";
-		in >> n;
+		while (true) {
+			cout << "\n Enter the number of employees: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < option; i++) {
 			in.get();
 			Employee e;
 			in >> e;
 			employees.push_back(e);
 		}
 
-		cout << "\n Enter the number of food types: ";
-		in >> n;
 
-		for (int i = 0;i < n;i++)
+		while (true) {
+			cout << "\n Enter the number of food types: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
+
+		for (int i = 0;i < option;i++)
 		{
 			in.get();
 			string food;
 			int quantity;
 			cout << "\n Food type: "; getline(in, food);
-			cout << "\n Quantity(kgs): "; in >> quantity;
+			while (true) {
+				cout << "\n Quantity(kgs): ";
+				string test;
+				getline(cin, test);
+				try {
+					quantity = myStoi(test);
+					if (quantity < 0)
+						throw out_of_range("\n Wrong input!\n");
+					if (cin.fail())
+						throw invalid_argument("\n Invalid input type!\n");
+					else if (to_string(int(quantity)) != test)
+						throw MyException();
+					break;
+				}
+				catch (const out_of_range& e)
+				{
+					cout << e.what();
+				}
+				catch (const invalid_argument& e) {
+					cout << e.what();
+					cin.clear(); cin.ignore(256, '\n');
+				}
+				catch (const MyException& e) {
+					cout << e.what() << "\n";
+					cin.clear();
+				}
+				catch (...) { cout << "\n Invalid input!"; }
+			}
 			foodStock[food] = quantity;
 		}
 
@@ -294,12 +439,16 @@ Farm& Farm::operator+(const Employee& obj) {
 	return *this;
 }
 
+//DE REZOLVAT AICI(problema la clientii creati prin constructor default)
 Farm& Farm::operator-(const Employee& obj) {
-	for(int i=0;i<this->employees.size();i++)
+	for (int i = 0;i < this->employees.size();i++)
+	{
+		cout <<( this->employees[i]== obj);
 		if (this->employees[i] == obj) {
 			this->employees.erase(this->employees.begin() + i);
 			break;
 		}
+	}
 	return *this;
 }
 

@@ -24,18 +24,84 @@ public:
 	// Destructor
 	~Employee() = default;
 	
+	// stoi method
+	int myStoi(const string& str) {
+		try {
+			size_t pos;
+			int num = stoi(str, &pos);
+			if (pos != str.length())
+				throw invalid_argument("");
+			return num;
+		}
+		catch (const invalid_argument& e) {
+			throw MyException();
+		}
+	}
+
 	// Input method
 	istream& read(istream& in) {
-		cout << "\n Enter salary: ";
-		in >> salary;
-		in.get();
+		
+		int option;
+		while (true) {
+			cout << "\n Enter salary: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!";cin.clear(); }
+		}
+		salary = option;
 		cout << "\n Enter name: ";
 		getline(in, name);
-		cout<< "\n Number of tasks: ";
-		int n;
-		in >> n;
-		in.get();
-		for(int i=0;i<n;i++){
+		while (true) {
+			cout << "\n Enter the number of tasks: ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 0)
+					throw out_of_range("\n Wrong input!\n");
+				if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
+		for(int i=0;i<option;i++){
 			string task;
 			cout << "\n Enter task: ";
 			getline(in, task);
@@ -89,8 +155,8 @@ public:
 	friend ostream& operator<<(ostream& out, const Employee& obj);
 };
 // Default constructor
-Employee::Employee() : name(""), salary(0) {
-	this->tasks.clear();
+Employee::Employee() : name("Unknown"), salary(500) {
+	this->tasks = {};
 }
 
 // Constructor with parameters

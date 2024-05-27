@@ -2,6 +2,7 @@
 #include <iostream>
 #include "IOInterface.h"
 #include <string>
+#include "exception.h"
 using namespace std;
 
 // Abstract class Animal
@@ -25,38 +26,82 @@ public:
 	// Destructor
 	virtual ~Animal()=default;
 
+	int myStoi(const string& str) {
+		try {
+			size_t pos;
+			int num = stoi(str, &pos);
+			if (pos != str.length())
+				throw invalid_argument("");
+			return num;
+		}
+		catch (const invalid_argument& e) {
+			throw MyException();
+		}
+	}
+
 	// Input/Output methods
 	istream& read(istream& in) override {
+	cin.clear();
 	cout << "\n Name: ";
 	getline(in, name);
 	while (true) {
 		cout << "\n Age(months): ";
-		in >> age;
+		string test;
+		getline(cin, test);
 		try {
-			
-			if ((age <= 0 && age <=120) || cin.fail())
+			age = myStoi(test);
+			if (cin.fail())
 				throw invalid_argument("\n Invalid input type. Please enter a positive integer. \n");
+			else if (age <= 0 && age <= 180)
+				throw out_of_range("\n Wrong index\n");
+			else if (to_string(age) != test)
+				throw MyException();
 			break;
 		}
-		catch (const invalid_argument &e) {
+		catch (const out_of_range& e) {
 			cout << e.what();
+		}
+		catch (const invalid_argument& e) {
+			cout << e.what() << '\n';
 			cin.clear();
 			cin.ignore(256, '\n');
+		}
+		catch (const MyException& e) {
+			cout << e.what() << "\n";
+			cin.clear();
+		}
+		catch (...) {
+			cout << "\n Invalid input";
 		}
 	}
 	while (true) {
 		cout << "\n Weight(kgs): ";
-		in >> weight;
+		string test;
+		getline(cin, test);
 		try {
-
-			if (weight <= 0 || cin.fail())
+			weight = myStoi(test);
+			if (weight <= 0 || weight > 2500)
+				throw out_of_range("\n Wrong input!\n");
+			else if(cin.fail())
 				throw invalid_argument("\n Invalid input type. Please enter a positive integer. \n");
+			else if (to_string(int(weight)) != test)
+				throw MyException();
 			break;
+		}
+		catch (const out_of_range& e) {
+			cout << e.what();
 		}
 		catch (const invalid_argument& e) {
 			cout << e.what();
 			cin.clear();
 			cin.ignore(256, '\n');
+		}
+		catch (const MyException& e) {
+			cout << e.what() << "\n";
+			cin.clear();
+		}
+		catch (...) {
+			cout << "\n Invalid input";
 		}
 	}
 

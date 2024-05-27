@@ -26,9 +26,36 @@ public:
 	// Input method
 	istream& read(istream& in) override {
 		Cow::read(in);
-		cout << "\n Breed(1-Japanese, 2-American, 3-Australian): ";
 		int option;
-		in >> option;
+		while (true) {
+			cout << "\n Breed(1-Japanese, 2-American, 3-Australian): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 1 || option>3)
+					throw out_of_range("\n Wrong input!\n");
+				else if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+				cin.get();
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 		switch (option) {
 		case 1: {
 			breed = "Japanese";
@@ -43,8 +70,36 @@ public:
 			break;
 		}
 		}
-		cout << "\n Grade(5-A5, 4-A4, 3-A3, 2-A2, 1-A1): ";
-		in >> option;
+		
+		while (true) {
+			cout << "\n Grade(5-A5, 4-A4, 3-A3, 2-A2, 1-A1): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 1 || option>5)
+					throw out_of_range("\n Wrong input!\n");
+				else if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+				cin.get();
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
 		switch (option) {
 		case 5: {
 				grade = "A5";
@@ -67,8 +122,36 @@ public:
 				break;
 			}
 		}
-		cout << "\n Marbling score(0-100): ";
-		in >> marbling;
+		while (true) {
+			cout << "\n Marbling score(1-100): ";
+			string test;
+			getline(cin, test);
+			try {
+				option = myStoi(test);
+				if (option < 1 || option>100)
+					throw out_of_range("\n Wrong input!\n");
+				else if (cin.fail())
+					throw invalid_argument("\n Invalid input type!\n");
+				else if (to_string(int(option)) != test)
+					throw MyException();
+				break;
+			}
+			catch (const out_of_range& e)
+			{
+				cout << e.what();
+			}
+			catch (const invalid_argument& e) {
+				cout << e.what();
+				cin.clear(); cin.ignore(256, '\n');
+				cin.get();
+			}
+			catch (const MyException& e) {
+				cout << e.what() << "\n";
+				cin.clear();
+			}
+			catch (...) { cout << "\n Invalid input!"; }
+		}
+		marbling = option;
 		this->price=weight*10*marbling/10;
 		return in;
 	}

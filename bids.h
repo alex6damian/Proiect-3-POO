@@ -120,16 +120,15 @@ public:
 				cout << "\n Unknown error!";
 			}
 		}
-		vector<int> v = { 1, 1, 1};
+		vector<int> v = { 1, 0, 1, 0, 1, 0};
 		srand(static_cast<unsigned int>(time(NULL)));
-		int rNumber = rand() % 3;
+		int rNumber = rand() % 6;
 		if (v[rNumber]) {
 			cout << "\n You won the bid!";
 			const T* copy = &it->first;
 			return copy;
 		}
 		else {
-		
 			cout << "\n You lost the bid!";
 			return nullptr;
 		}
