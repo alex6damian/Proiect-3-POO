@@ -194,4 +194,6 @@ bool Employee::operator==(const Employee& obj) {
 
 void Employee::addTask(string task){
 	tasks.push_back(task);
+	cout << "\n " << name << " has recieved a salary bonus!\n +200$";
+	salary += 200;
 }

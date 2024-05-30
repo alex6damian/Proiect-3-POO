@@ -33,7 +33,7 @@ public:
 	void displayBids() {
 		int i = 1;
 		for (auto it = bids.begin(); it != bids.end(); it++) {
-			cout << "\n Animal number "<<i++ << it->first << "\n Price: " << it->second << "$ \n";
+			cout << "\n Animal number "<<i++ << it->first << '\n';
 		}
 	}
 

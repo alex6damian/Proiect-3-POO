@@ -35,7 +35,7 @@ public:
 	int myStoi(const string& str) {
 	try {
 		size_t pos;
-		int num = stoi(str, &pos);
+		int num = stoi(str, &pos); // convert string to integer with pos length
 		if (pos != str.length())
 			throw invalid_argument("");
 		return num;
@@ -79,10 +79,17 @@ public:
 		}
 
 		for (int i = 0; i < option; i++) {
-			in.get();
-			Animal* a = new Cow();
-			in >> *a;
-			animals.push_back(a);
+			try {
+				Animal* a = new Cow();
+				in >> *a;
+				animals.push_back(a);
+			}
+			catch (const bad_alloc& e) {
+				cout << e.what()<<'\n';
+			}
+			catch (...) {
+				cout << "\n Unknown error!";
+			}
 		}
 
 		
@@ -116,10 +123,17 @@ public:
 		}
 
 		for (int i = 0; i < option; i++) {
-			in.get();
-			Animal* a = new Wagyu();
-			in >> *a;
-			animals.push_back(a);
+			try {
+				Animal* a = new Wagyu();
+				in >> *a;
+				animals.push_back(a);
+			}
+			catch (const bad_alloc& e) {
+				cout << e.what()<<'\n';
+			}
+			catch (...) {
+				cout << "\n Unknown error!";
+			}
 		}
 
 		while (true) {
@@ -152,7 +166,6 @@ public:
 		}
 
 		for (int i = 0; i < option; i++) {
-			in.get();
 			Employee e;
 			in >> e;
 			employees.push_back(e);
@@ -190,7 +203,6 @@ public:
 
 		for (int i = 0;i < option;i++)
 		{
-			in.get();
 			string food;
 			int quantity;
 			cout << "\n Food type: "; getline(in, food);
@@ -360,14 +372,25 @@ Farm::Farm(string manager, set<Animal> soldAnimals, map<string, int> foodStock, 
 
 	this->animals.clear();
 
-	for(int i=0;i<animals.size();i++)
-		if (typeid(Wagyu) == typeid(*animals[i])) {
-			this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*animals[i])));
-		}
-		else if (typeid(Cow) == typeid(*animals[i])) {
-			this->animals.push_back(new Cow(dynamic_cast<Cow&>(*animals[i])));
-		}
-		 
+	try {
+		for (int i = 0;i < animals.size();i++)
+			if (typeid(Wagyu) == typeid(*animals[i])) {
+				this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*animals[i])));
+			}
+			else if (typeid(Cow) == typeid(*animals[i])) {
+				this->animals.push_back(new Cow(dynamic_cast<Cow&>(*animals[i])));
+			}
+	}
+	catch (const bad_alloc& e) {
+		cout << e.what()<<'\n';
+	}
+	catch (const bad_cast& e) {
+		cout<<e.what()<<'\n';
+	}
+	catch (...) {
+		cout << "\n Unknown error!\n";
+	}
+
 }
 
 // Copy constructor
@@ -377,14 +400,24 @@ Farm::Farm(const Farm& obj) : manager(obj.manager), soldAnimals(obj.soldAnimals)
 		delete this->animals[i];
 
 	this->animals.clear();
-
-	for (int i = 0;i < animals.size();i++)
-		if (typeid(Wagyu) == typeid(*animals[i])) {
-			this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*animals[i])));
-		}
-		else if (typeid(Cow) == typeid(*animals[i])) {
-			this->animals.push_back(new Cow(dynamic_cast<Cow&>(*animals[i])));
-		}
+	try {
+		for (int i = 0;i < obj.animals.size();i++)
+			if (typeid(Wagyu) == typeid(*obj.animals[i])) {
+				this->animals.push_back(new Wagyu(dynamic_cast<Wagyu&>(*obj.animals[i])));
+			}
+			else if (typeid(Cow) == typeid(*obj.animals[i])) {
+				this->animals.push_back(new Cow(dynamic_cast<Cow&>(*obj.animals[i])));
+			}
+	}
+	catch (const bad_alloc& e) {
+		cout << e.what() << '\n';
+	}
+	catch (const bad_cast& e) {
+		cout << e.what() << '\n';
+	}
+	catch (...) {
+		cout << "\n Unknown error!\n";
+	}
 }
 
 // Destructor
@@ -410,16 +443,26 @@ Farm& Farm::operator=(const Farm& obj) {
 			delete this->animals[i];
 
 		this->animals.clear();
-
-		for (int i = 0;i < animals.size();i++)
-			if (typeid(Cow) == typeid(*animals[i])) {
-				Animal* a = new Cow(dynamic_cast<Cow&>(*animals[i]));
-				this->animals.push_back(a);
-			}
-			else if (typeid(Wagyu) == typeid(*animals[i])) {
-				Animal* a = new Wagyu(dynamic_cast<Wagyu&>(*animals[i]));
-				this->animals.push_back(a);
-			}
+		try {
+			for (int i = 0;i < animals.size();i++)
+				if (typeid(Cow) == typeid(*animals[i])) {
+					Animal* a = new Cow(dynamic_cast<Cow&>(*animals[i]));
+					this->animals.push_back(a);
+				}
+				else if (typeid(Wagyu) == typeid(*animals[i])) {
+					Animal* a = new Wagyu(dynamic_cast<Wagyu&>(*animals[i]));
+					this->animals.push_back(a);
+				}
+		}
+		catch(const bad_alloc &e){
+			cout << e.what()<<'\n';
+		}
+		catch(const bad_cast &e){
+			cout<<e.what()<<'\n';
+		}
+		catch(...){
+			cout << "\n Unknown error!\n";
+		}
 	}
 	return *this;
 }
@@ -454,10 +497,21 @@ Farm& Farm::operator-(const Employee& obj) {
 
 Farm& Farm::operator+(const Animal& obj) {
 
-	if (typeid(obj) == typeid(Wagyu))
-		this->animals.push_back(new Wagyu(dynamic_cast<const Wagyu&>(obj)));
-	else if (typeid(obj) == typeid(Cow))
-		this->animals.push_back(new Cow(dynamic_cast<const Cow&>(obj)));
+	try {
+		if (typeid(obj) == typeid(Wagyu))
+			this->animals.push_back(new Wagyu(dynamic_cast<const Wagyu&>(obj)));
+		else if (typeid(obj) == typeid(Cow))
+			this->animals.push_back(new Cow(dynamic_cast<const Cow&>(obj)));
+	}
+	catch (const bad_alloc& e) {
+		cout << e.what()<<'\n';
+	}
+	catch (const bad_cast& e) {
+		cout<<e.what()<<'\n';
+	}
+	catch (...) {
+		cout << "\n Unknown error!";
+	}
 
 	return *this;
 }

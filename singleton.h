@@ -18,12 +18,17 @@ private:
 	// Default Constructor
 	Singleton() = default;
 
-	// Destructor
-	~Singleton() {
-		if (instance != NULL) {
+	void deleteSingleton() {
+		if (instance != nullptr) {
+			for(int i=0;i<farms.size();i++)
+				delete farms[i];
+			farms.clear();
 			delete instance;
 		}
 	}
+
+	// Destructor
+	~Singleton()=default;
 public:
 
 	static Singleton* getInstance() {
@@ -40,7 +45,7 @@ public:
 	Singleton& operator=(const Singleton&) = delete;
 
 	void addFarm(Farm& farm) {
-		farms.push_back(&farm);
+		farms.push_back(new Farm(farm));
 	}
 
 	// Create method
@@ -115,7 +120,7 @@ void Singleton::run() {
 		}
 			switch (option) {
 			case 1: {
-				cout << "\n Create" << '\n';
+				cout << "\n Add a new farm" << '\n';
 				Farm f = create<Farm>();
 				addFarm(f);
 				break;
@@ -251,6 +256,7 @@ void Singleton::run() {
 			case 5: {
 				cout << "\n Exit" << '\n';
 				k = 0;
+				deleteSingleton();
 				break;}
 			}
 	}
@@ -441,7 +447,6 @@ void Singleton::manageFarm( Farm& obj) {
 				}
 				string task;
 			cout << "\n Enter the task: ";
-			cin.get();
 			getline(cin, task);
 			obj.setTask(index-1, task);
 			}
@@ -552,8 +557,10 @@ void Singleton::manageFarm( Farm& obj) {
 
 // exceptii tratate
 void Singleton::farmInfo(const Farm& obj) {
+
 	cout << "\n\n You have selected the farm managed by " << obj.getManager();
 	cout << "\n Select what type of information you would like to get:";
+
 	int k = 1;
 	while (k) {
 		cout << "\n 1. Display all information";
@@ -630,10 +637,15 @@ void Singleton::bids(Farm& obj) {
 	srand(static_cast<unsigned int>(time(NULL)));
 	Licitatie<Cow> lCows;
 	Licitatie<Wagyu> lWagyu;
-	Cow c1(rand()%100+5, rand() % 2000 + 200, "Cow 1", "Brown", "Meat", rand()%2);
-	Cow c2(rand()%100+5, rand() % 2000 + 100, "Cow 2", "Black", "Milk", rand()%2);
-	Wagyu w1(rand()%100+10, rand()%2000+300, "Wagyu 1", "White", "Meat", rand()%2, "Australian", "A4", rand()%100);
-	Wagyu w2(rand()%150+20, rand() % 2000 + 300, "Wagyu 2", "Brown", "Milk", rand()%2, "Japanese", "A5", rand()%100);
+	vector < string > names ={"Milka", "Ileana", "Daisy", "Bella", "Luna", "Molly", "Lola", "Lucy"};
+	vector<string> colors = { "Black", "Brown", "White" };
+	vector<string> usage = { "Milk", "Meat", "Both" };
+	vector<string> origin= { "Australian", "Japanese", "American" };
+	vector<string> grade={ "A1", "A2", "A3", "A4", "A5" };
+	Cow c1(rand()%100+5, rand() % 2000 + 200, names[rand()%names.size()], colors[rand()%colors.size()], usage[rand()%usage.size()], rand() % 2);
+	Cow c2(rand()%100+5, rand() % 2000 + 100, names[rand() % names.size()], colors[rand() % colors.size()], usage[rand() % usage.size()], rand()%2);
+	Wagyu w1(rand()%100+10, rand()%2000+300, names[rand() % names.size()], colors[rand() % colors.size()], usage[rand() % usage.size()], rand()%2, origin[rand()%origin.size()],grade[rand()%grade.size()], rand() % 100);
+	Wagyu w2(rand()%150+20, rand() % 2000 + 300, names[rand() % names.size()], colors[rand() % colors.size()], usage[rand() % usage.size()], rand()%2, origin[rand() % origin.size()], grade[rand() % grade.size()], rand()%100);
 	lCows.addBid(c1, c1.getWeight()*10);
 	lCows.addBid(c2, c2.getWeight()*10);
 	lWagyu.addBid(w1, w1.getWeight()*100);

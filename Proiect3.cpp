@@ -59,28 +59,6 @@ public:
 int main()
 {
 
-    /*Cow c3(10, 500, "Ileana", "Black", "Meat", 0);
-    Wagyu w3(10,500,"John","Red","Both",0, "Australian", "A5", 85);
-    Licitatie<Wagyu> l;
-    l.addBid(w3, w3.getWeight()*100);
-    l.displayBids();
-    l.tryBid(w3);*/
-    //Info<> animalInfo;
-    //Cow c1(10, 500, "Ileana", "Black", "Meat", 0);
-    //Wagyu w(10,500,"John","Red","Both",0, "Australian", "A5", 85);
-    //Info<Wagyu> wagyuInfo;
-    ////animalInfo.displayInfo(w);
-    ////animalInfo.displayInfo(c1);
-    //animalInfo.displayPrice(w);
-    //animalInfo.displayPrice(c1);
-
-    //Employee e1;
-    //cin >> e1;
-    //cout << e1;
-
-
-
-
     set<Animal> s;
     map<string, int> foodstack;
     foodstack["Wheat"] = 100;
@@ -92,25 +70,23 @@ int main()
     Animal *a=new Wagyu(10,500,"John","Red","Both",0, "Australian", "A5", 85);
     animals.push_back(a);
     vector<Employee> employees;
-    list<string> t;
-    Employee e1(t, "john", 5000);
+    list<string> t, t1;
+    t.push_back("Clean the cows");
+    t1.push_back("Feed the cows");
+    Employee e1(t, "Agapie Philip", 5000);
+    Employee e3(t1, "Andrei Tokacs", 7500);
     Employee e2;
     employees.push_back(e2);
     employees.push_back(e1);
     Farm f1("Eu", s, foodstack, animals, employees);
-    Singleton *menu=Singleton::getInstance();
+        Singleton* menu = Singleton::getInstance();
     Farm f2;
     menu->addFarm(f1);
     menu->addFarm(f2);
+
     menu->run();
-    //Employee cx;
-    //cin >> cx;
-    //cout << cx;
-    /*  vector<Farm*> farms;
-    farms.push_back(&f1);
-    cout << *farms[0];*/
-   // menu->run();
-    //Wagyu w=menu->create<Wagyu>();
-    //cout << w;
+
+
     return 0;
 }
+
